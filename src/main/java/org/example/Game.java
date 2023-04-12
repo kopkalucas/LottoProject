@@ -1,12 +1,12 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ResultChecker {
+public class Game {
 
-    private ArrayList userNumbers = new UserNumberReciver().inputNumbers();
-    private ArrayList winningNumbers = new LottoNumberGenerator().winningNumber();
+    private final ArrayList<Integer> winningNumbers = new LottoNumberGenerator().winningNumber();
+    private final ArrayList<Integer> userNumbers = new UserNumberReciver().inputNumbers();
+
 
 
 
@@ -18,8 +18,8 @@ public class ResultChecker {
 
         userNumbers.retainAll(winningNumbers);
 
-        if (userNumbers.size() > 3) {
-            System.out.println("!!You won a lottery!! Congratulaion");
+        if (userNumbers.size() >= 3) {
+            System.out.println("!!You won a lottery!! Congratulation");
 
         } else {
             System.out.println("This time you lose. Next time will be better :)");

@@ -9,6 +9,7 @@ public class UserNumberReciver {
     ArrayList<Integer> userNumbers = new ArrayList<>();
     public ArrayList<Integer> inputNumbers() {
         Scanner s = new Scanner(System.in);
+        System.out.println("!!!Welcome in the Lotto Game!!!\n");
         for (int i = 0; i < 6; i++) {
             while (true) {
                 System.out.println("Please enter number from range (1-49)");
