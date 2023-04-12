@@ -13,18 +13,27 @@ public class Game {
 
     public void resultCheck(){
 
-        System.out.printf("Winning numbers: %s%n", userNumbers);
-        System.out.printf("Your numbers: %s%n", winningNumbers);
 
-        userNumbers.retainAll(winningNumbers);
+        int result = 0;
 
-        if (userNumbers.size() >= 3) {
-            System.out.println("!!You won a lottery!! Congratulation");
+        for (int i = 0; i < userNumbers.size(); i++) {
+            for (int j = 0; j < winningNumbers.size(); j++) {
+                if (userNumbers.get(i) == winningNumbers.get(j)){
+                    result++;
+                }
+            }
+        }
+
+        if (result >= 3) {
+            System.out.println("\n!!You won a lottery!! Congratulation\n");
 
         } else {
-            System.out.println("This time you lose. Next time will be better :)");
+            System.out.println("This time you lose. Next time will be better :)\n");
 
         }
+
+        System.out.printf("Winning numbers: %s%n", userNumbers);
+        System.out.printf("Your numbers: %s%n", winningNumbers);
     }
 
 
