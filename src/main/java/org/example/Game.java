@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Game {
 
@@ -16,9 +17,9 @@ public class Game {
 
         int result = 0;
 
-        for (int i = 0; i < userNumbers.size(); i++) {
-            for (int j = 0; j < winningNumbers.size(); j++) {
-                if (userNumbers.get(i) == winningNumbers.get(j)){
+        for (Integer userNumber : userNumbers) {
+            for (Integer winningNumber : winningNumbers) {
+                if (Objects.equals(userNumber, winningNumber)) {
                     result++;
                 }
             }
