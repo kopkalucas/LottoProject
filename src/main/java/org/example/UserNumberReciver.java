@@ -2,36 +2,31 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Set;
 
 public class UserNumberReciver {
 
-    ArrayList<Integer> userNumbers = new ArrayList<>();
-    public ArrayList<Integer> inputNumbers() {
-        Scanner s = new Scanner(System.in);
+    List<Integer> userNumbers = new ArrayList<>();
+    InputReceivable inputReceivable;
+
+    public UserNumberReciver(InputReceivable inputReceivable) {
+        this.inputReceivable = inputReceivable;
+    }
+
+    public InputNumbersResult inputNumbers() {
         System.out.println("!!!Welcome in the Lotto Game!!!\n");
-        for (int i = 0; i < 6; i++) {
-            while (true) {
-                System.out.println("Please enter number from range (1-49)");
-                if (i >= 1) {
-                    System.out.printf("Your current numbers are :%s%n", userNumbers);
-                }
-                try{
-                    String numberString = s.nextLine();
-                    int number = Integer.parseInt(numberString);
-                    if (number >= 1 && number <= 49 && !userNumbers.contains(number)) {
-                        userNumbers.add(number);
-                        break;
-                    } else {
-                        System.out.printf("ERROR: %d is not in range (1-49)! or You have already entered the number to your list. Please try again.%n", number);
-                    }
-                } catch (NumberFormatException nfe) {
-                    System.out.println("ERROR: This is not a number! Please try again.");
-                }
+        System.out.println("Please enter number from range (1-49)");
+
+        Set<Integer> numbers = inputReceivable.inputSixNumbers();
+        for (Integer number : numbers) {
+            if (number >= 1 && number <= 49 && !userNumbers.contains(number)) {
+                userNumbers.add(number);
+            } else {
+                System.out.printf("ERROR: %d is not in range (1-49)! or You have already entered the number to your list. Please try again.%n", number);
+                return new InputNumbersResult(userNumbers, false);
             }
         }
-        s.close();
-        return userNumbers;
+        return new InputNumbersResult(userNumbers, true);
     }
 
 }

@@ -1,22 +1,17 @@
 package org.example;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Game {
 
-    private final ArrayList<Integer> winningNumbers = new LottoNumberGenerator().winningNumber();
-    private final ArrayList<Integer> userNumbers = new UserNumberReciver().inputNumbers();
+    public static final int WINNER_HIT_COUNT = 3;
 
+    public Game() {
+    }
 
-
-
-
-    public void resultCheck(){
-
-
+    public void checkResult(List<Integer> userNumbers, List<Integer> winningNumbers) {
         int result = 0;
-
         for (Integer userNumber : userNumbers) {
             for (Integer winningNumber : winningNumbers) {
                 if (Objects.equals(userNumber, winningNumber)) {
@@ -24,20 +19,17 @@ public class Game {
                 }
             }
         }
-
-        if (result >= 3) {
+        if (result >= WINNER_HIT_COUNT) {
             System.out.println("\n!!You won a lottery!! Congratulation\n");
-
-        } else {
-            System.out.println("This time you lose. Next time will be better :)\n");
-
+            printSummaryMessage(userNumbers, winningNumbers);
+            return;
         }
+        System.out.println("This time you lose. Next time will be better :)\n");
+        printSummaryMessage(userNumbers, winningNumbers);
+    }
 
+    private void printSummaryMessage(List<Integer> userNumbers, List<Integer> winningNumbers) {
         System.out.printf("Winning numbers: %s%n", userNumbers);
         System.out.printf("Your numbers: %s%n", winningNumbers);
     }
-
-
-
-
 }
