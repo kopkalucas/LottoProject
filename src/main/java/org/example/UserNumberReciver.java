@@ -1,12 +1,13 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class UserNumberReciver {
 
-    List<Integer> userNumbers = new ArrayList<>();
+    Set<Integer> userNumbers = new HashSet<>();
     InputReceivable inputReceivable;
 
     public UserNumberReciver(InputReceivable inputReceivable) {

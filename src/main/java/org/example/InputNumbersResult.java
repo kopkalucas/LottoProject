@@ -1,9 +1,10 @@
 package org.example;
 
 import java.util.List;
+import java.util.Set;
 
 public record InputNumbersResult(
-        List<Integer> inputNumbers,
+        Set<Integer> inputNumbers,
         boolean isValid
 ) {
 }
