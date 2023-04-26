@@ -22,17 +22,10 @@ public class Game {
             }
         }
         if (result >= WINNER_HIT_COUNT) {
-            System.out.println("\n!!You won a lottery!! Congratulation\n");
-            printSummaryMessage(userNumbers, winningNumbers);
-            return new GameResult(true);
+            //printSummaryMessage(userNumbers, winningNumbers);
+            return new GameResult(true, "!!You won a lottery!! Congratulation\\n\"");
         }
-        System.out.println("This time you lose. Next time will be better :)\n");
-        printSummaryMessage(userNumbers, winningNumbers);
-        return new GameResult(false);
+        return new GameResult(false,"This time you lose. Next time will be better :)\n");
     }
 
-    private void printSummaryMessage(Set<Integer> userNumbers, Set<Integer> winningNumbers) {
-        System.out.printf("Winning numbers: %s%n", userNumbers);
-        System.out.printf("Your numbers: %s%n", winningNumbers);
-    }
 }

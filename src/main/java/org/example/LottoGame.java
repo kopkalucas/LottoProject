@@ -17,17 +17,12 @@ public class LottoGame {
 
     public GameResult play() {
 
-
         InputNumbersResult inputNumbersResult = userNumberReciver.inputNumbers();
         if (!inputNumbersResult.isValid()){
-//            String message = inputNumbersResult.message();
-            System.out.println("something went wrong");
-            return new GameResult(false);
+            return new GameResult(false, "something went wrong");
         }
         Set<Integer> winningNumbers = lottoNumberGenerator.drawWinningNumbers();
-
-        Game game = new Game();
-        return game.checkResult(inputNumbersResult.inputNumbers(), winningNumbers);
+        return new Game().checkResult(inputNumbersResult.inputNumbers(), winningNumbers);
     }
 
 }

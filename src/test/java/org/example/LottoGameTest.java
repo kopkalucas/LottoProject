@@ -65,7 +65,7 @@ public class LottoGameTest {
     @Test
     public void should_return_looser_when_user_gave_less_than_six_numbers(){
         //Given
-        InputReceivable scannerInputReceiver = () -> Set.of(1,2,42);
+        InputReceivable scannerInputReceiver = () -> Set.of(1,2,3);
         UserNumberReciver userNumberReciver = new UserNumberReciver(scannerInputReceiver);
         NumberGenerable lottoNumberGenerator = () -> Set.of(1,2,3,4,5,6);
         LottoGame lottoGame = new LottoGame(userNumberReciver,lottoNumberGenerator);

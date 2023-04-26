@@ -11,6 +11,6 @@ public class LottoGameConsoleApplication {
         UserNumberReciver userNumberReciver = new UserNumberReciver(scannerInputReceiver);
         NumberGenerable lottoNumberGenerator = new LottoNumberGenerator();
         LottoGame lottoGame = new LottoGame(userNumberReciver,lottoNumberGenerator);
-        lottoGame.play();
+        System.out.println(lottoGame.play().getResultMessege());
     }
 }

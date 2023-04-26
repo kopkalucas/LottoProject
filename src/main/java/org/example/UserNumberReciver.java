@@ -15,15 +15,12 @@ public class UserNumberReciver {
     }
 
     public InputNumbersResult inputNumbers() {
-        System.out.println("!!!Welcome in the Lotto Game!!!\n");
-        System.out.println("Please enter number from range (1-49)");
-
         Set<Integer> numbers = inputReceivable.inputSixNumbers();
         for (Integer number : numbers) {
-            if (number >= 1 && number <= 49 && !userNumbers.contains(number)) {
+            if (number >= 1 && number <= 49 && !userNumbers.contains(number) && numbers.size() == 6) {
                 userNumbers.add(number);
             } else {
-                System.out.printf("ERROR: %d is not in range (1-49)! or You have already entered the number to your list. Please try again.%n", number);
+                System.out.println("ERROR: Numbers are incorrect!");
                 return new InputNumbersResult(userNumbers, false);
             }
         }
