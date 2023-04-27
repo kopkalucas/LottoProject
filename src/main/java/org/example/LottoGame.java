@@ -1,28 +1,27 @@
 package org.example;
 
-import org.example.console.ui.ScannerInputReceiver;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Set;
 
+@Component
+@AllArgsConstructor
 public class LottoGame {
 
-    private final UserNumberReciver userNumberReciver;
+
     private final NumberGenerable lottoNumberGenerator;
+    private final UserNumberValidator userNumberValidator;
 
-    public LottoGame(UserNumberReciver userNumberReciver, NumberGenerable lottoNumberGenerator) {
-        this.userNumberReciver = userNumberReciver;
-        this.lottoNumberGenerator = lottoNumberGenerator;
-    }
 
-    public GameResult play() {
+    public GameResult play(Set<Integer> numbers) {
 
-        InputNumbersResult inputNumbersResult = userNumberReciver.inputNumbers();
-        if (!inputNumbersResult.isValid()){
+        InputNumbersResult validate = userNumberValidator.validate(numbers);
+        if (!validate.isValid()){
             return new GameResult(false, "something went wrong");
         }
         Set<Integer> winningNumbers = lottoNumberGenerator.drawWinningNumbers();
-        return new Game().checkResult(inputNumbersResult.inputNumbers(), winningNumbers);
+        return new Game().checkResult(validate.inputNumbers(), winningNumbers);
     }
 
 }
