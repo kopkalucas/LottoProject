@@ -12,8 +12,11 @@ public class LottoGameConsoleApplication {
     public static void main(String[] args) {
         InputReceivable scannerInputReceiver = new ScannerInputReceiver();
         NumberGenerable lottoNumberGenerator = new LottoNumberGenerator();
-        LottoGame lottoGame = new LottoGame(lottoNumberGenerator);
+        UserNumberValidator userNumberValidator = new UserNumberValidator();
+
         Set<Integer> inputNumbersResult = scannerInputReceiver.inputSixNumbers();
+
+        LottoGame lottoGame = new LottoGame(lottoNumberGenerator,userNumberValidator);
         System.out.println(lottoGame.play(inputNumbersResult).getResultMessege());
     }
 }
