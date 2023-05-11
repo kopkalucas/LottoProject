@@ -18,8 +18,9 @@ public class LotteryRestController {
     private final LottoGame lottoGame;
 
     @PostMapping("/numbers")
-    public ResponseEntity<GameResult> inputNumbers(@RequestBody Set<Integer> numbers) {
-        GameResult play = lottoGame.play(numbers);
+
+    public ResponseEntity<GameResult> inputNumbers(@RequestBody NumberRequest numbers) {
+        GameResult play = lottoGame.play(numbers.numbers());
         return ResponseEntity.ok(play);
     }
 
