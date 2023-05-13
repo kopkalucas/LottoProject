@@ -3,12 +3,13 @@ package org.example;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Set;
 
 @Component
 @AllArgsConstructor
-@Scope(value = "prototype")
+@RequestScope
 public class LottoGame {
 
 
