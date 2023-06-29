@@ -73,6 +73,15 @@ class NumberReciverFacadeTest {
         //Then
         assertThat(cuponDto.id()).isEqualTo(-1);
     }
+    @Test
+    public void should_return_numbers_when_user_gave_date() {
+        //Given
+        //When
+        numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 99));
+        Set<Integer> set = numberReciverFacade.retriveNumbersForDate(LocalDateTime.of(2023, 7, 1, 12, 0));
+        //Then
+        assertThat(set).isEqualTo(Set.of(1,2,3,4,5,99));
+    }
 
 
 }

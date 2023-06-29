@@ -1,7 +1,9 @@
 package com.lotto.numberreciver;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +44,10 @@ public class NumberReciverFacade {
         return true;
     }
     LocalDateTime calculateNextSaturday() {
-        return date.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+        LocalDate date = LocalDate.now();
+        LocalDate nextSaturday = date.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+        LocalTime time = LocalTime.of(12,0);
+        return nextSaturday.atTime(time);
     }
 }
 
