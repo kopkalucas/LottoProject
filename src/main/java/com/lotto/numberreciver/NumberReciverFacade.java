@@ -1,53 +1,46 @@
 package com.lotto.numberreciver;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NumberReciverFacade {
 
     private AtomicInteger ID = new AtomicInteger(0);
     private LocalDateTime date;
+    private final Validator validator;
 
-    public NumberReciverFacade(LocalDateTime date) {
+    public NumberReciverFacade(LocalDateTime date, Validator validator) {
         this.date = date;
+        this.validator = validator;
     }
 
     Map<LocalDateTime,Set<Integer>> database = new HashMap<>();
     public Set<Integer> retriveNumbersForDate(LocalDateTime date){
         return database.get(date);
     }
+    public LocalDateTime retriveDrawDate(){
+        return calculateNextSaturday();
+    }
     public CuponDto inputNumbers(Set<Integer> numbersFromUser) {
-        if (numberValidator(numbersFromUser)){
 
+        List<String> validationErrors = validator.validateNumbers(numbersFromUser);
+        if (validationErrors.isEmpty()){
             LocalDateTime loterryDate = calculateNextSaturday();
             database.put(loterryDate, numbersFromUser);
-            return new CuponDto(ID.incrementAndGet(), loterryDate);
+            return new CuponDto(ID.incrementAndGet(), loterryDate, "Success");
         }
-        return new CuponDto(-1,null);
+        return new CuponDto(null,null, validationErrors.toString());
     }
-    boolean numberValidator(Set<Integer> numbersFromUser) {
-        if (numbersFromUser.size() != 6) {
-            return false;
+
+    private LocalDateTime calculateNextSaturday() {
+        if(date.getDayOfWeek().equals(DayOfWeek.SATURDAY) && date.getHour() < 12 && date.getMinute() < 55){
+            return date.withHour(12).withMinute(0);
         }
-        for (int number : numbersFromUser) {
-            if (number <= 0 || number >= 100) {
-                return false;
-            }
-        }
-        return true;
-    }
-    LocalDateTime calculateNextSaturday() {
-        LocalDate date = LocalDate.now();
-        LocalDate nextSaturday = date.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
-        LocalTime time = LocalTime.of(12,0);
-        return nextSaturday.atTime(time);
+        LocalDateTime nextSaturday = date.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+        return nextSaturday.withHour(12).withMinute(0);
     }
 }
 

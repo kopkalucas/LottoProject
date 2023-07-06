@@ -15,6 +15,7 @@ public class NumberGenaratorFacade {
         }
         return Set.of();
     }
+
     Set<Integer> generateNumbers(LocalDateTime date) {
         Set<Integer> set = new HashSet<>();
         Random random = new Random();
