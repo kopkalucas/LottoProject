@@ -35,54 +35,38 @@ class NumberReciverFacadeTest {
     public void should_return_validation_error_message_when_user_gave_less_than_six_numbers() {
         //Given
         //When
-        CuponDto cuponDto = numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5));
+        CuponDto cuponDto = numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, -5));
         //Then
-        assertThat(cuponDto.message()).isEqualTo("You gave less than six numbers");
+        assertThat(cuponDto.message()).contains("You gave less than six numbers");
 
     }
     @Test
-    public void should_return_minus_1_when_user_gave_more_than_six_numbers() {
+    public void should_return_validation_error_when_user_gave_more_than_six_numbers() {
         //Given
 
         //When
         CuponDto cuponDto = numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6,7 ));
         //Then
-        assertThat(cuponDto.id()).isEqualTo(-1);
+        assertThat(cuponDto.message()).contains("You gave more than six numbers");
 
     }
     @Test
-    public void should_return_minus_1_when_user_gave_not_unique_six_numbers() {
-        //Given
-        //When
-        HashSet<Integer> hashSet = new HashSet<>();
-        hashSet.add(6);
-        hashSet.add(6);
-        hashSet.add(6);
-        hashSet.add(6);
-        hashSet.add(6);
-        hashSet.add(6);
-        CuponDto cuponDto = numberReciverFacade.inputNumbers(hashSet);
-        //Then
-        assertThat(cuponDto.id()).isEqualTo(-1);
-
-    }
-    @Test
-    public void should_return_minus_1_when_user_gave_numbers_outside_range_1_99() {
+    public void should_return_validation_error_when_user_gave_numbers_outside_range_1_99() {
         //Given
         //When
         CuponDto cuponDto = numberReciverFacade.inputNumbers(Set.of(-111, 2, 322, 4, 500, 600));
         //Then
-        assertThat(cuponDto.id()).isEqualTo(-1);
+        assertThat(cuponDto.message()).contains("which is outside of range (1-99)");
     }
     @Test
     public void should_return_numbers_when_user_gave_date() {
         //Given
         NumberReciverFacade numberReciverFacade = new NumberReciverFacade(LocalDateTime.of(2023, 6, 29, 10, 0), new Validator());
         //When
-        numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 99));
-        Set<Integer> set = numberReciverFacade.retriveNumbersForDate(LocalDateTime.of(2023, 7, 1, 12, 0));
+        numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6));
+        Set<CuponDto> cupons = numberReciverFacade.retriveNumbersForDate(LocalDateTime.of(2023, 7, 1, 12, 0));
         //Then
-        assertThat(set).isEqualTo(Set.of(1,2,3,4,5,99));
+        assertThat(cupon).isEqualTo(Set.of(1,2,3,4,5,6));
     }
     @Test
     public void should_return_next_lottery_date() {

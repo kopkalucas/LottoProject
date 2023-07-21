@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class NumberReciverFacade {
 
@@ -17,9 +18,13 @@ public class NumberReciverFacade {
         this.validator = validator;
     }
 
-    Map<LocalDateTime,Set<Integer>> database = new HashMap<>();
-    public Set<Integer> retriveNumbersForDate(LocalDateTime date){
-        return database.get(date);
+    Map<Integer,CuponDto> database = new HashMap<>();
+    public Set<CuponDto> retriveNumbersForDate(LocalDateTime date){
+        return database.values()
+                .stream()
+                .filter(cuponDto -> cuponDto.loterryDate()
+                        .equals(date))
+                .collect(Collectors.toSet());
     }
     public LocalDateTime retriveDrawDate(){
         return calculateNextSaturday();
@@ -29,10 +34,12 @@ public class NumberReciverFacade {
         List<String> validationErrors = validator.validateNumbers(numbersFromUser);
         if (validationErrors.isEmpty()){
             LocalDateTime loterryDate = calculateNextSaturday();
-            database.put(loterryDate, numbersFromUser);
-            return new CuponDto(ID.incrementAndGet(), loterryDate, "Success");
+            int id = ID.incrementAndGet();
+            CuponDto cupon = new CuponDto(id, loterryDate, "Success", numbersFromUser);
+            database.put(id, cupon);
+            return cupon;
         }
-        return new CuponDto(null,null, validationErrors.toString());
+        return new CuponDto(null,null, String.join(", ", validationErrors), numbersFromUser);
     }
 
     private LocalDateTime calculateNextSaturday() {
