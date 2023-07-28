@@ -66,7 +66,7 @@ class NumberReciverFacadeTest {
         numberReciverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6));
         Set<CuponDto> cupons = numberReciverFacade.retriveNumbersForDate(LocalDateTime.of(2023, 7, 1, 12, 0));
         //Then
-        assertThat(cupon).isEqualTo(Set.of(1,2,3,4,5,6));
+        assertThat(cupons).isEqualTo(Set.of(1,2,3,4,5,6));
     }
     @Test
     public void should_return_next_lottery_date() {
