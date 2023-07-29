@@ -1,6 +1,6 @@
 package com.lotto.resultchecker;
 
-import com.lotto.numberreciver.CuponDto;
+import com.lotto.numberreciver.dto.TicketDto;
 
 import java.util.List;
 import java.util.Map;
@@ -8,19 +8,19 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ResultCheckerRepository {
-    private Map<String, CuponDto> inMemoryDatabase = new ConcurrentHashMap<>();
+    private Map<String, TicketDto> inMemoryDatabase = new ConcurrentHashMap<>();
 
 
-    public void saveAll(List<CuponDto> winnigCupons) {
+    public void saveAll(List<TicketDto> winnigCupons) {
         winnigCupons
-                .forEach(cuponDto -> inMemoryDatabase.put(cuponDto.id(), cuponDto) );
+                .forEach(ticketDto -> inMemoryDatabase.put(ticketDto.ticketId(), ticketDto) );
     }
 
-    public Optional<CuponDto> findById(String id) {
-        CuponDto cuponDto = inMemoryDatabase.get(id);
-        if(cuponDto == null) {
+    public Optional<TicketDto> findById(String id) {
+        TicketDto ticketDto = inMemoryDatabase.get(id);
+        if(ticketDto == null) {
             return Optional.empty();
         }
-        return Optional.of(cuponDto);
+        return Optional.of(ticketDto);
     }
 }
