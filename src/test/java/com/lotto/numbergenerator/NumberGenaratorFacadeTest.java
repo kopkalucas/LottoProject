@@ -1,109 +1,97 @@
 package com.lotto.numbergenerator;
 
+import com.lotto.numbergenerator.dto.WinningNumbersDto;
+import com.lotto.numberreciver.NumberReceiverFacade;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.configuration.IMockitoConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 class NumberGenaratorFacadeTest {
 
-    private final LocalDateTime LOTERRY_DATE = LocalDateTime.of(2023, 6, 17, 12, 0);
-    NumberGenaratorFacade numberGenaratorFacade = new NumberGenaratorFacade();
-    @Test
-    public void should_return_winning_numbers_when_won_numbers_exists_for_saturday_past_twelve() {
-        //Given
-        Set<Integer> generatedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
-        //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(LOTERRY_DATE);
-        //Then
-        assertThat(wonNumbers).isEqualTo(generatedNumbers);
-    }
-    @Test
-    public void should_return_empty_winning_numbers_when_wanted_to_retirve_for_diffrent_day_than_saturday() {
-        //Given
-        LocalDateTime date = LocalDateTime.of(2023, 6, 15, 15, 41);
-        numberGenaratorFacade.generateNumbers(date);
-        //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(date);
-        //Then
-        assertThat(wonNumbers).isEqualTo(Set.of());
-    }
-
-    @Test
-    public void should_return_winning_numbers_when_won_numbers_existed_for_past_draw() {
-        //Given
-        LocalDateTime date = LocalDateTime.of(2023, 6, 10, 15, 41);
-        Set<Integer> generatedNumbersInPast = numberGenaratorFacade.generateNumbers(date);
-        Set<Integer> generatedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
-        //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(date);
-        //Then
-        assertThat(wonNumbers).isEqualTo(generatedNumbersInPast);
-    }
-
+    private final WinningNumbersRepository winningNumbersRepository = new InMemoryNumberGeneratorRepositoryTestImpl();
+    NumberReceiverFacade numberReceiverFacade = mock(NumberReceiverFacade.class);
     @Test
     public void should_return_six_winning_numbers() {
         //Given
-        numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
+        when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
+        NumberGenaratorFacade numbersGenerator = new NumberGenaratorFacade(generator, new WinningNumberValidator(), winningNumbersRepository, numberReceiverFacade );
         //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(LOTERRY_DATE);
+        WinningNumbersDto generatedNumbers = numbersGenerator.generateWinningNumbers();
         //Then
-        assertThat(wonNumbers).hasSize(6);
+        assertThat(generatedNumbers.getWinningNumbers().size()).isEqualTo(6);
+    }
+    @Test
+    public void should_return_set_of_required_size_within_required_range() {
+        //Given
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
+        when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
+        NumberGenaratorFacade numbersGenerator = new NumberGenaratorFacade(generator, new WinningNumberValidator(), winningNumbersRepository, numberReceiverFacade );
+        //When
+        WinningNumbersDto generatedNumbers = numbersGenerator.generateWinningNumbers();
+        //Then
+        int upperBand = 99;
+        int lowerBand = 1;
+        Set<Integer> winningNumbers = generatedNumbers.getWinningNumbers();
+        boolean numbersInRange = winningNumbers.stream().allMatch(number -> number >= lowerBand && number <= upperBand);
+        assertThat(numbersInRange).isTrue();
+    }
+    @Test
+    public void should_throw_an_exception_when_number_not_in_range() {
+        //Given
+        Set<Integer> numbersOutOfRange = Set.of(1, 2, 3, 4, 5, 100);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl(numbersOutOfRange);
+        when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
+        NumberGenaratorFacade numbersGenerator = new NumberGenaratorFacade(generator, new WinningNumberValidator(), winningNumbersRepository, numberReceiverFacade );
+        //When
+        //Then
+        assertThrows(IllegalStateException.class, numbersGenerator::generateWinningNumbers, "Number out of range!");
     }
     @Test
     public void should_return_unique_winning_numbers() {
         //Given
-        numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
+        when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(LocalDateTime.now());
+        NumberGenaratorFacade numbersGenerator = new NumberGenaratorFacade(generator, new WinningNumberValidator(), winningNumbersRepository, numberReceiverFacade );
         //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(LOTERRY_DATE);
+        WinningNumbersDto generatedNumbers = numbersGenerator.generateWinningNumbers();
         //Then
-        assertThat(wonNumbers).doesNotHaveDuplicates();
-    }
-
-    @Test
-    public void should_return_empty_winning_numbers_when_is_saturday_before_noon() {
-        //Given
-        LocalDateTime date = LocalDateTime.of(2023, 6, 10, 11, 41);
-        numberGenaratorFacade.generateNumbers(date);
-        //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(date);
-        //Then
-        assertThat(wonNumbers).isEqualTo(Set.of());
+        assertThat(generatedNumbers.getWinningNumbers()).doesNotHaveDuplicates();
     }
     @Test
-    public void should_return_random_numbers_when_generated_few_times_in_a_row() {
+    public void should_return_winning_numbers_by_given_date() {
         //Given
+        LocalDateTime drawDate = LocalDateTime.of(2023, 9, 23, 12, 0, 0);
+        Set<Integer> generatedWinningNumbers = Set.of(1, 2, 3, 4, 5, 6);
+        String id = UUID.randomUUID().toString();
+        WinningNumbers winningNumbers = WinningNumbers.builder()
+                .id(id)
+                .date(drawDate)
+                .winningNumbers(generatedWinningNumbers)
+                .build();
+        winningNumbersRepository.save(winningNumbers);
+        RandomNumberGenerable generator = new WinningNumberGeneratorTestImpl();
+        when(numberReceiverFacade.retrieveNextDrawDate()).thenReturn(drawDate);
+        NumberGenaratorFacade numbersGenerator = new NumberGenaratorFacade(generator, new WinningNumberValidator(), winningNumbersRepository, numberReceiverFacade );
         //When
-        Set<Integer> firstGeneratedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
-        Set<Integer> secondGeneratedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
-        Set<Integer> thirdGeneratedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
+        WinningNumbersDto winningNumbersDto = numbersGenerator.retrieveWinningNumberByDate(drawDate);
         //Then
-        assertAll(
-                () -> assertThat(firstGeneratedNumbers).isNotEqualTo(secondGeneratedNumbers),
-                () -> assertThat(secondGeneratedNumbers).isNotEqualTo(thirdGeneratedNumbers),
-                () -> assertThat(thirdGeneratedNumbers).isNotEqualTo(firstGeneratedNumbers)
-        );
+        WinningNumbersDto expectedWinningNumbersDto = WinningNumbersDto.builder()
+                .date(drawDate)
+                .winningNumbers(generatedWinningNumbers)
+                .build();
+        assertThat(expectedWinningNumbersDto).isEqualTo(winningNumbersDto);
     }
-    @Test
-    public void winning_numbers_should_be_from_the_range_1_99() {
-        //Given
-        Set<Integer> generatedNumbers = numberGenaratorFacade.generateNumbers(LOTERRY_DATE);
-        //When
-        Set<Integer> wonNumbers = numberGenaratorFacade.retriveWonNumbersForDrawDate(LOTERRY_DATE);
-        //Then
-        assertThat(wonNumbers)
-                .hasOnlyElementsOfTypes(Integer.class)
-                .allSatisfy(number -> assertThat(number).isBetween(1, 99));
-    }
-
-
-
 
 }

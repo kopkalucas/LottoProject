@@ -1,30 +1,44 @@
 package com.lotto.numbergenerator;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.util.*;
+import com.lotto.numbergenerator.dto.WinningNumbersDto;
+import com.lotto.numberreciver.NumberReceiverFacade;
+import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
+@AllArgsConstructor
 public class NumberGenaratorFacade {
 
-    public static final int LOTTERY_HOUR = 12;
-    Map<LocalDateTime,Set<Integer>> database = new HashMap<>();
-    public Set<Integer> retriveWonNumbersForDrawDate(LocalDateTime date) {
+    private final RandomNumberGenerable winningNumberGenerator;
+    private final WinningNumberValidator winningNumberValidator;
+    private final WinningNumbersRepository winningNumbersRepository;
+    private final NumberReceiverFacade numberReceiverFacade;
 
-        if(date.getDayOfWeek().equals(DayOfWeek.SATURDAY) && date.getHour() >= LOTTERY_HOUR) {
-            return database.get(date);
-        }
-        return Set.of();
+    public WinningNumbersDto generateWinningNumbers() {
+        LocalDateTime nextDrawDate = numberReceiverFacade.retrieveNextDrawDate();
+        Set<Integer> winningNumbers = winningNumberGenerator.genereteSixRandomNumbers();
+        winningNumberValidator.validate(winningNumbers);
+        winningNumbersRepository.save(WinningNumbers.builder()
+                        .winningNumbers(winningNumbers)
+                        .date(nextDrawDate)
+                        .build());
+        return WinningNumbersDto.builder()
+                .winningNumbers(winningNumbers)
+                .date(nextDrawDate)
+                .build();
     }
 
-    Set<Integer> generateNumbers(LocalDateTime date) {
-        Set<Integer> set = new HashSet<>();
-        Random random = new Random();
-        while (set.size() != 6) {
-            set.add(random.nextInt(99) + 1);
-        }
-        database.put(date,set);
-        return set;
+    public WinningNumbersDto retrieveWinningNumberByDate(LocalDateTime date) {
+        WinningNumbers numbersByDate = winningNumbersRepository.findNumbersByDrawDate(date);
+        return WinningNumbersDto.builder()
+                .winningNumbers(numbersByDate.winningNumbers())
+                .date(numbersByDate.date())
+                .build();
     }
 
-
+    public boolean areWinningNumbersGeneratedByDate() {
+        LocalDateTime nextDrawDate = numberReceiverFacade.retrieveNextDrawDate();
+        return winningNumbersRepository.existsByDate(nextDrawDate);
+    }
 }
