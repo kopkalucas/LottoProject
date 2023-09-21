@@ -32,7 +32,12 @@ public class NumberReceiverFacade {
                 .message(ValidationResult.INPUT_SUCCESS.info)
                 .build();
     }
-    public List<TicketDto> retriveAllTicketsByNextDrawDate(LocalDateTime date){
+    public List<TicketDto> retrieveAllTicketsByNextDrawDate() {
+        LocalDateTime nextDrawDate = drawDateGenerator.getNextDrawDate();
+        return retrieveAllTicketsByNextDrawDate(nextDrawDate);
+    }
+
+    public List<TicketDto> retrieveAllTicketsByNextDrawDate(LocalDateTime date){
         List<Ticket> allTicketsByDrawDate = repository.findAllTicketsByDrawDate(date);
         return allTicketsByDrawDate
                 .stream()

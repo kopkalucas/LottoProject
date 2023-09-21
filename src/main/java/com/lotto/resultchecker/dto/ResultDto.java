@@ -1,4 +1,16 @@
 package com.lotto.resultchecker.dto;
 
-public record ResultDto(String message) {
+import lombok.Builder;
+
+import java.time.LocalDateTime;
+import java.util.Set;
+
+@Builder
+public record ResultDto(String hash,
+                        Set<Integer> numbers,
+                        Set<Integer> hitNumbers,
+                        LocalDateTime drawDate,
+                        boolean isWinner,
+                        Set<Integer> wonNumbers
+) {
 }
