@@ -16,7 +16,7 @@ import static com.lotto.domain.resultannoucer.MessageResponse.WIN_MESSAGE;
 
 
 @AllArgsConstructor
-public class ResultAnnoucerFacade {
+public class ResultAnnouncerFacade {
 
     private final ResultCheckerFacade resultCheckerFacade;
     private final ResponseRepository responseRepository;
