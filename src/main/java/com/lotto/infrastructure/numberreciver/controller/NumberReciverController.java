@@ -2,6 +2,7 @@ package com.lotto.infrastructure.numberreciver.controller;
 
 import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
+import com.lotto.domain.numberreciver.dto.RequestNumberDto;
 import com.lotto.domain.numberreciver.dto.TicketDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class NumberReciverController {
     }
 
     @PostMapping("/inputNumbers")
-    public ResponseEntity<InputNumberResultDto> inputNumbers(@RequestBody Set<Integer> numbersFromUser){
-        InputNumberResultDto inputNumberResultDto = numberReceiverFacade.inputNumbers(numbersFromUser);
+    public ResponseEntity<InputNumberResultDto> inputNumbers(@RequestBody RequestNumberDto request){
+        InputNumberResultDto inputNumberResultDto = numberReceiverFacade.inputNumbers(request.numbersFromUser());
         return  ResponseEntity.ok(inputNumberResultDto);
     }
 
