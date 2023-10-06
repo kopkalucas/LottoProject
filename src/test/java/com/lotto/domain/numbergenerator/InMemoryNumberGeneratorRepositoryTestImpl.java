@@ -12,12 +12,12 @@ public class InMemoryNumberGeneratorRepositoryTestImpl implements WinningNumbers
 
     @Override
     public WinningNumbers save (WinningNumbers winningNumbers){
-        inMemoryDatabase.put(winningNumbers.date(), winningNumbers);
+        inMemoryDatabase.put(winningNumbers.getDate(), winningNumbers);
         return winningNumbers;
     };
 
     @Override
-    public WinningNumbers findNumbersByDrawDate(LocalDateTime date){
+    public WinningNumbers findNumbersByDate(LocalDateTime date){
         return inMemoryDatabase.get(date);
     };
 

@@ -1,11 +1,10 @@
 package com.lotto.domain.resultchecker;
 
-import java.util.List;
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.Optional;
 
-public interface PlayerRepository {
+public interface PlayerRepository extends CrudRepository<Player, String> {
 
-    List<Player> saveAll(List<Player> player);
-
-    Optional<Player> findById(String hash);
+    Optional<Player> findById (String hash);
 }

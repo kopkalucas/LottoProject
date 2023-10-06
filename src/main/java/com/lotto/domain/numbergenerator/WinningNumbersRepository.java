@@ -1,11 +1,14 @@
 package com.lotto.domain.numbergenerator;
 
+
+import org.springframework.data.repository.Repository;
 import java.time.LocalDateTime;
 
-public interface WinningNumbersRepository {
+
+public interface WinningNumbersRepository extends Repository<WinningNumbers, Long> {
     WinningNumbers save (WinningNumbers winningNumbers);
 
-    WinningNumbers findNumbersByDrawDate(LocalDateTime date);
+    WinningNumbers findNumbersByDate(LocalDateTime date);
 
     boolean existsByDate(LocalDateTime nextDrawDate);
 }

@@ -3,11 +3,13 @@ package com.lotto.domain.numbergenerator;
 import com.lotto.domain.numbergenerator.dto.WinningNumbersDto;
 import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
+@Component
 public class NumberGenaratorFacade {
 
     private final RandomNumberGenerable winningNumberGenerator;
@@ -15,14 +17,16 @@ public class NumberGenaratorFacade {
     private final WinningNumbersRepository winningNumbersRepository;
     private final NumberReceiverFacade numberReceiverFacade;
 
+
     public WinningNumbersDto generateWinningNumbers() {
         LocalDateTime nextDrawDate = numberReceiverFacade.retrieveNextDrawDate();
         Set<Integer> winningNumbers = winningNumberGenerator.genereteSixRandomNumbers();
         winningNumberValidator.validate(winningNumbers);
-        winningNumbersRepository.save(WinningNumbers.builder()
-                        .winningNumbers(winningNumbers)
-                        .date(nextDrawDate)
-                        .build());
+        WinningNumbers build = WinningNumbers.builder()
+                .winningNumbers(winningNumbers)
+                .date(nextDrawDate)
+                .build();
+        winningNumbersRepository.save(build);
         return WinningNumbersDto.builder()
                 .winningNumbers(winningNumbers)
                 .date(nextDrawDate)
@@ -30,10 +34,10 @@ public class NumberGenaratorFacade {
     }
 
     public WinningNumbersDto retrieveWinningNumberByDate(LocalDateTime date) {
-        WinningNumbers numbersByDate = winningNumbersRepository.findNumbersByDrawDate(date);
+        WinningNumbers numbersByDate = winningNumbersRepository.findNumbersByDate(date);
         return WinningNumbersDto.builder()
-                .winningNumbers(numbersByDate.winningNumbers())
-                .date(numbersByDate.date())
+                .winningNumbers(numbersByDate.getWinningNumbers())
+                .date(numbersByDate.getDate())
                 .build();
     }
 

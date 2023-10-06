@@ -13,7 +13,7 @@ public class InMemoryResultAnnoucerFacadeTestImpl implements ResponseRepository 
 
     @Override
     public ResultResponse save (ResultResponse resultResponse) {
-        inMemoryDatabase.put(resultResponse.hash(), resultResponse);
+        inMemoryDatabase.put(resultResponse.getHash(), resultResponse);
         return  resultResponse;
     }
 

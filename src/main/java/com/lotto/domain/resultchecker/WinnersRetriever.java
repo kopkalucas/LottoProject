@@ -1,10 +1,13 @@
 package com.lotto.domain.resultchecker;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 @AllArgsConstructor
 class WinnersRetriever {
     private final static int NUMBERS_WHEN_PLAYER_WON = 3;

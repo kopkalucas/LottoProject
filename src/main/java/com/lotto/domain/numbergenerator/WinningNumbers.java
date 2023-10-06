@@ -1,11 +1,26 @@
 package com.lotto.domain.numbergenerator;
 
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 
 @Builder
-record WinningNumbers (String id, Set<Integer> winningNumbers, LocalDateTime date) {
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class WinningNumbers{
+
+    @Id
+    @GeneratedValue()
+    Long id;
+    Set<Integer> winningNumbers;
+    LocalDateTime date;
 }
+

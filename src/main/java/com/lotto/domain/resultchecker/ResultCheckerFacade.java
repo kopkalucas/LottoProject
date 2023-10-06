@@ -7,10 +7,12 @@ import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import com.lotto.domain.resultchecker.dto.PlayersDto;
 import com.lotto.domain.resultchecker.dto.ResultDto;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
 
+@Component
 @AllArgsConstructor
 public class ResultCheckerFacade {
 
@@ -42,10 +44,10 @@ public class ResultCheckerFacade {
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()
                 .hash(ticketId)
-                .numbers(player.numbers())
-                .hitNumbers(player.hitNumbers())
-                .drawDate(player.drawDate())
-                .wonNumbers(player.wonNumbers())
+                .numbers(player.getNumbers())
+                .hitNumbers(player.getHitNumbers())
+                .drawDate(player.getDrawDate())
+                .wonNumbers(player.getWonNumbers())
                 .isWinner(player.isWinner())
                 .build();
     }

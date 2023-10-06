@@ -5,6 +5,8 @@ import com.lotto.domain.resultannoucer.dto.ResultAnnouncerResponseDto;
 import com.lotto.domain.resultchecker.ResultCheckerFacade;
 import com.lotto.domain.resultchecker.dto.ResultDto;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,7 +16,7 @@ import static com.lotto.domain.resultannoucer.MessageResponse.LOSE_MESSAGE;
 import static com.lotto.domain.resultannoucer.MessageResponse.WAIT_MESSAGE;
 import static com.lotto.domain.resultannoucer.MessageResponse.WIN_MESSAGE;
 
-
+@Component
 @AllArgsConstructor
 public class ResultAnnouncerFacade {
 

@@ -13,7 +13,7 @@ public class InMemoryNumberReceiverRepositoryTestImpl implements NumberReceiverR
 
     @Override
     public Ticket save(Ticket ticket) {
-        inMemoryDatabase.put(ticket.ticketId(), ticket);
+        inMemoryDatabase.put(ticket.getTicketId(), ticket);
         return ticket;
     }
 
@@ -21,7 +21,7 @@ public class InMemoryNumberReceiverRepositoryTestImpl implements NumberReceiverR
     public List<Ticket> findAllTicketsByDrawDate(LocalDateTime date) {
         return inMemoryDatabase.values()
                 .stream()
-                .filter(ticket -> ticket.drawDate().equals(date))
+                .filter(ticket -> ticket.getDrawDate().equals(date))
                 .toList();
     }
 }

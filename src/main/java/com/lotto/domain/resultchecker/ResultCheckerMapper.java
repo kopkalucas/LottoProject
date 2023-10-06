@@ -11,12 +11,12 @@ class ResultCheckerMapper {
     static List<ResultDto> mapPlayersToResults(List<Player> players) {
         return players.stream()
                 .map(player -> ResultDto.builder()
-                        .hash(player.hash())
-                        .numbers(player.numbers())
-                        .hitNumbers(player.hitNumbers())
-                        .drawDate(player.drawDate())
+                        .hash(player.getHash())
+                        .numbers(player.getNumbers())
+                        .hitNumbers(player.getHitNumbers())
+                        .drawDate(player.getDrawDate())
                         .isWinner(player.isWinner())
-                        .wonNumbers(player.wonNumbers())
+                        .wonNumbers(player.getWonNumbers())
                         .build())
                 .collect(Collectors.toList());
     }

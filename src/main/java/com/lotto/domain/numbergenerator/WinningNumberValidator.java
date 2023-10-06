@@ -1,7 +1,10 @@
 package com.lotto.domain.numbergenerator;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Set;
 
+@Component
 class WinningNumberValidator {
 
     private final int LOWER_BAND = 0;

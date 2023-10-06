@@ -4,24 +4,21 @@ import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
 import com.lotto.domain.numberreciver.dto.RequestNumberDto;
 import com.lotto.domain.numberreciver.dto.TicketDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
 
 @RestController
 public class NumberReciverController {
 
     private final NumberReceiverFacade numberReceiverFacade;
 
-    @Autowired
+
     public NumberReciverController(NumberReceiverFacade numberReceiverFacade) {
         this.numberReceiverFacade = numberReceiverFacade;
     }
