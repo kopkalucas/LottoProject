@@ -1,9 +1,11 @@
 package com.lotto.domain.resultannoucer;
 
+import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import com.lotto.domain.resultannoucer.dto.ResponseDto;
 import com.lotto.domain.resultannoucer.dto.ResultAnnouncerResponseDto;
 import com.lotto.domain.resultchecker.ResultCheckerFacade;
 import com.lotto.domain.resultchecker.dto.ResultDto;
+import com.lotto.domain.resultchecker.dto.ResultState;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +39,8 @@ public class ResultAnnouncerFacade {
         }
         ResponseDto responseDto = buildResponseDto(resultDto);
         responseRepository.save(buildResponse(responseDto, LocalDateTime.now(clock)));
-        if (responseRepository.existsById(hash) && !isAfterResultAnnouncementTime(resultDto)) {
-            return new ResultAnnouncerResponseDto(responseDto, WAIT_MESSAGE.info);
+        if (resultDto.resultState().equals(ResultState.WAIT)) {
+            return new ResultAnnouncerResponseDto(null, WAIT_MESSAGE.info);
         }
         if (resultCheckerFacade.findByTicketId(hash).isWinner()) {
             return new ResultAnnouncerResponseDto(responseDto, WIN_MESSAGE.info);
@@ -69,10 +71,11 @@ public class ResultAnnouncerFacade {
                 .build();
     }
 
-    private boolean isAfterResultAnnouncementTime(ResultDto resultDto) {
-        LocalDateTime announcementDateTime = resultDto.drawDate();
-        return LocalDateTime.now(clock).isAfter(announcementDateTime);
-    }
+//    private boolean isAfterResultAnnouncementTime(ResultDto resultDto) {
+//        LocalDateTime announcementDateTime = resultDto.drawDate();
+//        return LocalDateTime.now(clock).isAfter(announcementDateTime);
+//    }
+
 
 }
 

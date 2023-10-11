@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 public class Player {
+
     @Id
     String hash;
     Set<Integer> numbers;

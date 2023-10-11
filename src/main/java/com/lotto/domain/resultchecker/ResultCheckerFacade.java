@@ -4,13 +4,16 @@ import com.lotto.domain.numbergenerator.NumberGenaratorFacade;
 import com.lotto.domain.numbergenerator.dto.WinningNumbersDto;
 import com.lotto.domain.numberreciver.dto.TicketDto;
 import com.lotto.domain.numberreciver.NumberReceiverFacade;
+import com.lotto.domain.resultannoucer.dto.ResultAnnouncerResponseDto;
 import com.lotto.domain.resultchecker.dto.PlayersDto;
 import com.lotto.domain.resultchecker.dto.ResultDto;
+import com.lotto.domain.resultchecker.dto.ResultState;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
+
 
 @Component
 @AllArgsConstructor
@@ -40,6 +43,12 @@ public class ResultCheckerFacade {
     }
 
     public ResultDto findByTicketId(String ticketId) {
+        if(numberReceiverFacade.ticketExistsByIdAndTimeIsBeforeDrawDate(ticketId)){
+            return ResultDto.builder()
+                    .hash(ticketId)
+                    .resultState(ResultState.WAIT)
+                    .build();
+        }
         Player player = playerRepository.findById(ticketId)
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()
@@ -49,6 +58,7 @@ public class ResultCheckerFacade {
                 .drawDate(player.getDrawDate())
                 .wonNumbers(player.getWonNumbers())
                 .isWinner(player.isWinner())
+                .resultState(ResultState.SUCCESS)
                 .build();
     }
 }

@@ -11,6 +11,7 @@ public record ResultDto(String hash,
                         Set<Integer> hitNumbers,
                         LocalDateTime drawDate,
                         boolean isWinner,
-                        Set<Integer> wonNumbers
+                        Set<Integer> wonNumbers,
+                        ResultState resultState
 ) {
 }

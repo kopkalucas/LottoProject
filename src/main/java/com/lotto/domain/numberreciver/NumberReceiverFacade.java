@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -16,6 +17,7 @@ public class NumberReceiverFacade {
     private final NumberValidator validator;
     private final NumberReceiverRepository repository;
     private final DrawDateGenerator drawDateGenerator;
+    private final Clock clock;
 
     public InputNumberResultDto inputNumbers(Set<Integer> numbersFromUser) {
         List<ValidationResult> validationResultList = validator.validate(numbersFromUser);
@@ -46,6 +48,15 @@ public class NumberReceiverFacade {
                 .stream()
                 .map(TicketMapper::mapFromTicket)
                 .toList();
+    }
+
+    public boolean ticketExistsByIdAndTimeIsBeforeDrawDate(String id){
+        Optional<Ticket> ticketById = repository.findTicketByTicketId(id);
+        if(ticketById.isEmpty()){
+            return false;
+        }
+        Ticket ticket = ticketById.get();
+        return ticket.drawDate.isAfter(LocalDateTime.now(clock));
     }
 
 
