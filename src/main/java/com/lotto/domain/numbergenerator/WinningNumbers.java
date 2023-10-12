@@ -9,18 +9,17 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 
-@Builder
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class WinningNumbers{
 
     @Id
-    @GeneratedValue()
-    Long id;
-    Set<Integer> winningNumbers;
     LocalDateTime date;
+    Set<Integer> winningNumbers;
 }
 

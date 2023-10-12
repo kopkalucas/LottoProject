@@ -1,12 +1,14 @@
 package com.lotto.domain.numberreciver;
 
 import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
+import com.lotto.domain.numberreciver.dto.TicketDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +24,7 @@ class NumberReceiverFacadeTest {
     @Test
     public void should_return_correct_response_when_user_input_six_numbers_in_range(){
         //Given
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         Set<Integer> numbersFromUser = Set.of(1, 2, 3, 4, 5, 99);
         //When
         InputNumberResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
@@ -33,7 +35,7 @@ class NumberReceiverFacadeTest {
     @Test
     public void should_return_validation_error_when_user_gave_numbers_outside_range_1_99() {
         //Given
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         Set<Integer> numbersFromUser = Set.of(-111, 2, 322, 4, 500, 600);;
         //When
         InputNumberResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
@@ -44,7 +46,7 @@ class NumberReceiverFacadeTest {
     @Test
     public void should_return_validation_error_message_when_user_gave_less_than_six_numbers() {
         //Given
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         Set<Integer> numbersFromUser = Set.of(1,2,3,4,5);;
         //When
         InputNumberResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
@@ -55,7 +57,7 @@ class NumberReceiverFacadeTest {
     @Test
     public void should_return_validation_error_when_user_gave_more_than_six_numbers() {
         //Given
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         Set<Integer> numbersFromUser = Set.of(1,2,3,4,5,6,7);;
         //When
         InputNumberResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
@@ -68,7 +70,7 @@ class NumberReceiverFacadeTest {
         //Given
         Clock clock = Clock.fixed(LocalDateTime.of(2023, 9, 16, 10, 00, 0).toInstant(ZoneOffset.UTC), ZoneId.of("Europe/London"));
         DrawDateGenerator drawDateGenerator = new DrawDateGenerator(clock);
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         //When
         LocalDateTime testedDrawDate = numberReceiverFacade.retrieveNextDrawDate();
         //Then
@@ -77,9 +79,10 @@ class NumberReceiverFacadeTest {
 
     @Test
     public void should_return_next_saturday_as_lottery_date_when_user_played_at_hold_time() {
+        //Given
         Clock clock = Clock.fixed(LocalDateTime.of(2023, 9, 16, 11, 00, 0).toInstant(ZoneOffset.UTC), ZoneId.of("Europe/London"));
         DrawDateGenerator drawDateGenerator = new DrawDateGenerator(clock);
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         //When
         LocalDateTime testedDrawDate = numberReceiverFacade.retrieveNextDrawDate();
         //Then
@@ -88,28 +91,13 @@ class NumberReceiverFacadeTest {
 
     @Test
     public void should_return_numbers_when_user_gave_date() {
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator);
+        //Given
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(numberValidator, inMemoryNumberReceiverRepositoryTest, drawDateGenerator, clock);
         Set<Integer> numbersFromUser = Set.of(1, 2, 3, 4, 5, 99);
         //When
         InputNumberResultDto result = numberReceiverFacade.inputNumbers(numbersFromUser);
         //Then
         assertThat(result.numberFromUser()).isEqualTo(numbersFromUser);
     }
-//    @Test
-//    public void should_return_save_to_database_when_user_gave_six_numbers(){
-//        //Given
-//        Set<Integer> numberFromUser= Set.of(1,2,3,4,5,6);
-//        InputNumberResultDto result = numberReceiverFacade.inputNumbers(numberFromUser);
-//        LocalDateTime drawDate = LocalDateTime.of(2023, 7, 1, 12, 0);
-//        //When
-//        List<TicketDto> ticketDtos = numberReceiverFacade.userNumbers(drawDate);
-//        //Then
-//        assertThat(ticketDtos).contains(
-//               TicketDto.builder()
-//                       .ticketId(result.ticketId())
-//                       .drawDate(drawDate)
-//                       .numbersFromUser(result.numberFromUser())
-//                       .build()
-//       );
-//   }
+
 }

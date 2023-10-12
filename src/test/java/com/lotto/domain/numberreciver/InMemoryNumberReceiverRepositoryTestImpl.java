@@ -6,6 +6,7 @@ import com.lotto.domain.numberreciver.Ticket;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryNumberReceiverRepositoryTestImpl implements NumberReceiverRepository {
@@ -23,5 +24,10 @@ public class InMemoryNumberReceiverRepositoryTestImpl implements NumberReceiverR
                 .stream()
                 .filter(ticket -> ticket.getDrawDate().equals(date))
                 .toList();
+    }
+
+    @Override
+    public Optional<Ticket> findTicketByTicketId(String id) {
+        return null;
     }
 }
