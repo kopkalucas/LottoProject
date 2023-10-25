@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class LottoAplication {
+public class LottoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(LottoAplication.class, args);
+        SpringApplication.run(LottoApplication.class, args);
     }
 
 }
