@@ -12,6 +12,7 @@ public class InMemoryResultCheckerFacadeTestImpl implements PlayerRepository {
 
     private final Map<String, Player> inMemoryDatabase = new ConcurrentHashMap<>();
 
+
     public List<Player> saveAll(List<Player> player) {
        player.forEach(player1 -> inMemoryDatabase.put(player1.getHash(), player1));
        return player;

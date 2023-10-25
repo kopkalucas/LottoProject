@@ -5,6 +5,7 @@ import com.lotto.domain.numbergenerator.WinningNumbersRepository;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryNumberGeneratorRepositoryTestImpl implements WinningNumbersRepository {
@@ -17,8 +18,8 @@ public class InMemoryNumberGeneratorRepositoryTestImpl implements WinningNumbers
     };
 
     @Override
-    public WinningNumbers findNumbersByDate(LocalDateTime date){
-        return inMemoryDatabase.get(date);
+    public Optional<WinningNumbers> findNumbersByDate(LocalDateTime date){
+        return Optional.ofNullable(inMemoryDatabase.get(date));
     };
 
     @Override

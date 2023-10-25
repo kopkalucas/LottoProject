@@ -34,7 +34,7 @@ public class NumberGenaratorFacade {
     }
 
     public WinningNumbersDto retrieveWinningNumberByDate(LocalDateTime date) {
-        WinningNumbers numbersByDate = winningNumbersRepository.findNumbersByDate(date);
+        WinningNumbers numbersByDate = winningNumbersRepository.findNumbersByDate(date).orElseThrow(RuntimeException::new);
         return WinningNumbersDto.builder()
                 .winningNumbers(numbersByDate.getWinningNumbers())
                 .date(numbersByDate.getDate())

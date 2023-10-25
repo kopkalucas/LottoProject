@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <swagger.version>2.0.2</swagger.version>
         <testcontainers.version>1.17.4</testcontainers.version>
+        <awaitility.version>4.2.0</awaitility.version>
     </properties>
     <dependencies>
         <dependency>
@@ -73,6 +74,12 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,6 +1,7 @@
 package com.lotto;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lotto.configuration.IntegrationConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.utility.DockerImageName;
 
-@SpringBootTest(classes = LottoExcelentLKopkaApplication.class)
+
+@SpringBootTest(classes = {LottoAplication.class, IntegrationConfiguration.class})
 @ActiveProfiles("integration")
 @AutoConfigureMockMvc
 @Testcontainers
@@ -27,11 +27,16 @@ public class BaseIntegrationTest {
     public ObjectMapper objectMapper;
 
     @Container
-    public static final PostgreSQLContainer postgresSQLContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
+    public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
+            .withDatabaseName("postgres")
+            .withUsername("postgres")
+            .withPassword("pass");
 
     @DynamicPropertySource
     public static void propertyOverride(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.postgres.uri", postgresSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", () -> "postgres");
+        registry.add("spring.datasource.password", () -> "pass");
     }
 
 }

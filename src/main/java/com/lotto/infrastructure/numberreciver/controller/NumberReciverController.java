@@ -4,6 +4,7 @@ import com.lotto.domain.numberreciver.NumberReceiverFacade;
 import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
 import com.lotto.domain.numberreciver.dto.RequestNumberDto;
 import com.lotto.domain.numberreciver.dto.TicketDto;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +15,10 @@ import java.util.List;
 
 
 @RestController
+@AllArgsConstructor
 public class NumberReciverController {
 
     private final NumberReceiverFacade numberReceiverFacade;
-
-
-    public NumberReciverController(NumberReceiverFacade numberReceiverFacade) {
-        this.numberReceiverFacade = numberReceiverFacade;
-    }
 
     @GetMapping("/numberReciver")
     LocalDateTime returnNextDrawDate() {

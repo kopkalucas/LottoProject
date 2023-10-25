@@ -1,6 +1,7 @@
-package com.lotto.domain;
+package com.lotto.configuration;
 
 import java.time.*;
+import java.util.Objects;
 
 public class AdjustableClock extends Clock {
 
@@ -21,6 +22,8 @@ public class AdjustableClock extends Clock {
         return ZonedDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(),
                 time.getHour(), time.getMinute(), time.getSecond(), time.getNano(), zone);
     }
+
+
 
     @Override
     public ZoneId getZone() {
@@ -97,4 +100,6 @@ public class AdjustableClock extends Clock {
         Duration offset = Duration.ofMinutes(minutes);
         advanceInTimeBy(offset);
     }
+
+
 }
