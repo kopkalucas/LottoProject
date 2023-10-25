@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lotto</groupId>
-    <artifactId>LottoExcelentLKopka</artifactId>
+    <artifactId>LottoProject1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>LottoExcelentLKopka</name>
     <description>LottoExcelentLKopka</description>

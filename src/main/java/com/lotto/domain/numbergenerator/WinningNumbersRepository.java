@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface WinningNumbersRepository extends Repository<WinningNumbers, Long> {
     WinningNumbers save (WinningNumbers winningNumbers);
 
+
     Optional<WinningNumbers> findNumbersByDate(LocalDateTime date);
 
     boolean existsByDate(LocalDateTime nextDrawDate);
