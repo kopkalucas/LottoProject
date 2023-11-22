@@ -29,9 +29,9 @@ public class ResultAnnouncerFacade {
     public ResultAnnouncerResponseDto checkResult(String hash) {
         if (responseRepository.existsById(hash)) {
             Optional<ResultResponse> resultResponseCached = responseRepository.findById(hash);
-            if (resultResponseCached.isPresent()) {
-                return new ResultAnnouncerResponseDto(ResultMapper.mapToDto(resultResponseCached.get()), ALREADY_CHECKED.info);
-            }
+//            if (resultResponseCached.isPresent()) {
+//                return new ResultAnnouncerResponseDto(ResultMapper.mapToDto(resultResponseCached.get()), ALREADY_CHECKED.info);
+//            }
         }
         ResultDto resultDto = resultCheckerFacade.findByTicketId(hash);
         if (resultDto == null) {

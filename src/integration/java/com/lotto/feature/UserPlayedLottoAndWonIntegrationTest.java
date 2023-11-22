@@ -1,8 +1,10 @@
 package com.lotto.feature;
 
 import com.lotto.BaseIntegrationTest;
+import com.lotto.configuration.AdjustableClock;
 import com.lotto.domain.numbergenerator.NumberGenaratorFacade;
 import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
+import com.lotto.domain.resultchecker.ResultCheckerFacade;
 import com.lotto.infrastructure.numbergenerator.scheduler.WinningNumberScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -29,6 +32,12 @@ public class UserPlayedLottoAndWonIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     WinningNumberScheduler winningNumberScheduler;
+
+    @Autowired
+    AdjustableClock clock;
+
+    @Autowired
+    ResultCheckerFacade resultCheckerFacade;
 
 
     @Test
@@ -48,14 +57,18 @@ public class UserPlayedLottoAndWonIntegrationTest extends BaseIntegrationTest {
 
         //step 2 user made POST .inputnumbers with 6 numbers (1, 2, 3, 4, 5, 6) at 19.11.2022 12:00 and system returned OK(200)
         //given
+        Set<Integer> winningNumbers = numberGenaratorFacade.retrieveWinningNumberByDate(drawDate).getWinningNumbers();
         //when
+        String string = winningNumbers.toString();
+        String jsonString = String.format("""
+        {
+            "numbersFromUser": %s
+        }
+        """, string);
+
         ResultActions perform = mockMvc.perform(post("/inputNumbers")
-                .content("""
-                        {
-                        "numbersFromUser": [1,2,3,4,5,6]
-                        }
-                        """.trim()
-                ).contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString)
+                .contentType(MediaType.APPLICATION_JSON)
         );
         //then
         MvcResult mvcResult = perform.andExpect(status().isOk()).andReturn();
@@ -68,7 +81,7 @@ public class UserPlayedLottoAndWonIntegrationTest extends BaseIntegrationTest {
                 () -> assertThat(inputNumberResultDto.message()).isEqualTo("SUCCESS")
         );
 
-        //step 4
+        //step 3
 
         //given
         //when
@@ -79,6 +92,52 @@ public class UserPlayedLottoAndWonIntegrationTest extends BaseIntegrationTest {
                     {
                     "message": "Not found for id: notExistingId",
                     "status": "NOT_FOUND"
+                    }
+                    """.trim()
+                ));
+
+        // step 4
+
+        //given
+        //when
+        ResultActions performGetResultWithExistingTicketId = mockMvc.perform(get("/results/" + inputNumberResultDto.ticketId()));
+        //then
+        performGetResultWithExistingTicketId.andExpect(status().isOk())
+                .andExpect(content().json("""
+                    {
+                    "message": "Results are being calculated, please come back later"
+                    }
+                    """.trim()
+                ));
+
+
+        //step 5
+
+
+        //given
+        //when
+        resultCheckerFacade.generateResults();
+        //then
+
+
+        //step 6
+
+        //given
+        //when
+        clock.plusDays(1);
+        //then
+
+
+        //step 7
+
+        //given
+        //when
+        ResultActions performGetResult = mockMvc.perform(get("/results/" + inputNumberResultDto.ticketId()));
+        //then
+        performGetResult.andExpect(status().isOk())
+                .andExpect(content().json("""
+                    {
+                    "message": "Congratulations, you won!"
                     }
                     """.trim()
                 ));

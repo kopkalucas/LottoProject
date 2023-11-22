@@ -4,7 +4,6 @@ import com.lotto.domain.numbergenerator.NumberGenaratorFacade;
 import com.lotto.domain.numbergenerator.dto.WinningNumbersDto;
 import com.lotto.domain.numberreciver.dto.TicketDto;
 import com.lotto.domain.numberreciver.NumberReceiverFacade;
-import com.lotto.domain.resultannoucer.dto.ResultAnnouncerResponseDto;
 import com.lotto.domain.resultchecker.dto.PlayersDto;
 import com.lotto.domain.resultchecker.dto.ResultDto;
 import com.lotto.domain.resultchecker.dto.ResultState;
@@ -27,7 +26,7 @@ public class ResultCheckerFacade {
     public PlayersDto generateResults() {
         List<TicketDto> allTicketsByDate = numberReceiverFacade.retrieveAllTicketsByNextDrawDate();
         List<Ticket> tickets = ResultCheckerMapper.mapFromTicketDto(allTicketsByDate);
-        WinningNumbersDto winningNumbersDto = numberGenaratorFacade.generateWinningNumbers();
+        WinningNumbersDto winningNumbersDto = numberGenaratorFacade.retrieveWinningNumberByDate(tickets.get(0).drawDate());
         Set<Integer> winningNumbers = winningNumbersDto.getWinningNumbers();
         if (winningNumbers == null || winningNumbers.isEmpty()) {
             return PlayersDto.builder()

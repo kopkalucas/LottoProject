@@ -18,9 +18,12 @@ public class WinningNumberScheduler {
         this.numberGenaratorFacade = numberGenaratorFacade;
     }
 
+
     @Scheduled(cron = "${winning.number.scheduler}")
     public void generate() {
-        log.info("Generating winning numbers");
-        numberGenaratorFacade.generateWinningNumbers();
+        if(!numberGenaratorFacade.areWinningNumbersGeneratedByDate()){
+            log.info("Generating winning numbers");
+            numberGenaratorFacade.generateWinningNumbers();
+        }
     }
 }
