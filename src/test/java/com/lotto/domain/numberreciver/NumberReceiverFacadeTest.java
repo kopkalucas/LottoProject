@@ -1,14 +1,11 @@
 package com.lotto.domain.numberreciver;
 
-import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
-import com.lotto.domain.numberreciver.dto.TicketDto;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;

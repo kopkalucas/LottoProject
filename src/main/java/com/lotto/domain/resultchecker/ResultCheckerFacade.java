@@ -42,12 +42,12 @@ public class ResultCheckerFacade {
     }
 
     public ResultDto findByTicketId(String ticketId) {
-        if(numberReceiverFacade.ticketExistsByIdAndTimeIsBeforeDrawDate(ticketId)){
-            return ResultDto.builder()
-                    .hash(ticketId)
-                    .resultState(ResultState.WAIT)
-                    .build();
-        }
+//        if(numberReceiverFacade.ticketExistsByIdAndTimeIsBeforeDrawDate(ticketId)){
+//            return ResultDto.builder()
+//                    .hash(ticketId)
+//                    .resultState(ResultState.WAIT)
+//                    .build();
+//        }
         Player player = playerRepository.findById(ticketId)
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()

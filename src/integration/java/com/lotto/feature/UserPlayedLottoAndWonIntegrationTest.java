@@ -3,7 +3,6 @@ package com.lotto.feature;
 import com.lotto.BaseIntegrationTest;
 import com.lotto.configuration.AdjustableClock;
 import com.lotto.domain.numbergenerator.NumberGenaratorFacade;
-import com.lotto.domain.numberreciver.dto.InputNumberResultDto;
 import com.lotto.domain.resultchecker.ResultCheckerFacade;
 import com.lotto.infrastructure.numbergenerator.scheduler.WinningNumberScheduler;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
